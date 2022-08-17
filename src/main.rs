@@ -3,10 +3,11 @@ use std::fs::File;
 use std::io::Write;
 use std::process::exit;
 use std::str;
-
 fn main() {
     println!("Rainbow table basic generator");
     println!("To abort program, press Ctrl + C in Your console.");
+
+    static mut BOOL_EXIT: bool = false;
 
     let mut argument = String::new();
     let mut range_1: i8 = 0;
@@ -21,6 +22,11 @@ fn main() {
     ];
     let mut length: u64 = 0;
     let args: Vec<String> = env::args().collect();
+
+    ctrlc::set_handler(|| unsafe {
+        BOOL_EXIT = true;
+    })
+    .expect("Error setting handler");
 
     if args.len() > 1 {
         argument = args[1].clone();
@@ -71,7 +77,7 @@ fn main() {
     fn create_list(range_1: i8, character_array: &[char; 61], mut file: &File) -> u64 {
         let mut password_length = 1;
         let error_message: &str = "Unable to write to text file!";
-        let mut length: u64 = 0;
+        let mut length_inner: u64 = 0;
 
         if range_1 > 0 {
             password_length = range_1;
@@ -85,7 +91,7 @@ fn main() {
                 let formated_in_bytes = formated_string.as_bytes();
 
                 file.write(formated_in_bytes).expect(error_message);
-                length += 1;
+                length_inner += 1;
             }
         } else if password_length == 2 {
             let mut character_array_index: usize = 0;
@@ -97,7 +103,7 @@ fn main() {
                 let formated_password = format!("{password}\n");
                 file.write(formated_password.as_bytes())
                     .expect(error_message);
-                length += 1;
+                length_inner += 1;
 
                 character_array_index += 1;
 
@@ -128,7 +134,7 @@ fn main() {
                 file.write(formated_password.as_bytes())
                     .expect(error_message);
                 //Trigger if the first character is less then 9 -> <=8
-                length += 1;
+                length_inner += 1;
                 //First switch
                 if password_begin_index != character_array.len() - 1 {
                     password_begin_index += 1;
@@ -165,6 +171,12 @@ fn main() {
             let mut password_begin: String = character_array[password_begin_index].to_string();
 
             loop {
+                unsafe {
+                    if BOOL_EXIT == true {
+                        break;
+                    }
+                }
+
                 let mut password = password_begin.clone();
                 password.push(character_array[second_character_array_index]);
                 password.push(character_array[third_character_array_index]);
@@ -172,7 +184,7 @@ fn main() {
                 let formated_password = format!("{password}\n");
                 file.write(formated_password.as_bytes())
                     .expect(error_message);
-                length += 1;
+                length_inner += 1;
                 //First switch
                 if password_begin_index != character_array.len() - 1 {
                     password_begin_index += 1;
@@ -222,6 +234,12 @@ fn main() {
             let mut password_begin: String = character_array[password_begin_index].to_string();
 
             loop {
+                unsafe {
+                    if BOOL_EXIT == true {
+                        break;
+                    }
+                }
+
                 let mut password = password_begin.clone();
                 password.push(character_array[second_character_array_index]);
                 password.push(character_array[third_character_array_index]);
@@ -230,7 +248,7 @@ fn main() {
                 let formated_password = format!("{password}\n");
                 file.write(formated_password.as_bytes())
                     .expect(error_message);
-                length += 1;
+                length_inner += 1;
                 //First switch
                 if password_begin_index != character_array.len() - 1 {
                     password_begin_index += 1;
@@ -295,6 +313,12 @@ fn main() {
             let mut password_begin: String = character_array[password_begin_index].to_string();
 
             loop {
+                unsafe {
+                    if BOOL_EXIT == true {
+                        break;
+                    }
+                }
+
                 let mut password = password_begin.clone();
                 password.push(character_array[second_character_array_index]);
                 password.push(character_array[third_character_array_index]);
@@ -304,7 +328,7 @@ fn main() {
                 let formated_password = format!("{password}\n");
                 file.write(formated_password.as_bytes())
                     .expect(error_message);
-                length += 1;
+                length_inner += 1;
                 //First switch
                 if password_begin_index != character_array.len() - 1 {
                     password_begin_index += 1;
@@ -378,13 +402,24 @@ fn main() {
         } else {
             println!("Passoword length over 6 is not supported yet!");
         }
-        println!("{} length passwords are generated!", password_length);
-        length
+        unsafe {
+            if BOOL_EXIT == true {
+                println!(
+                    "{} length passwords aren't fully generated!",
+                    password_length
+                );
+            } else {
+                println!("{} length passwords are generated!", password_length);
+            }
+        }
+
+        length_inner
     }
 
     if argument.contains("-range") {
         for _i in range_1..=range_2 {
             length += create_list(range_1, &character_array, &file);
+
             range_1 += 1;
         }
 
