@@ -4,7 +4,7 @@ use std::io::Write;
 use std::process::exit;
 use std::str;
 fn main() {
-    println!("Rainbow table basic generator");
+    println!("Password text file basic generator");
     println!("To abort program, press Ctrl + C in Your console.");
 
     static mut BOOL_EXIT: bool = false;
@@ -436,64 +436,8 @@ fn main() {
 
             range_1 += 1;
         }
-
-        let length_string = length.to_string();
-
-        let mut byte_array = length_string.as_bytes().to_vec();
-        let mut index = byte_array.len() - 1;
-
-        let mut index_int: i32 = index.try_into().unwrap();
-        if index_int - 2 >= 0 {
-            index -= 2;
-            byte_array.insert(index, 32);
-        }
-
-        loop {
-            index_int = index.try_into().unwrap();
-            if index_int - 3 >= 0 {
-                index -= 3;
-                byte_array.insert(index, 32);
-            } else {
-                break;
-            }
-        }
-
-        let byte_array_reverse = str::from_utf8(&byte_array).unwrap();
-
-        println!(
-            "Total number of generated passwords ---> |{}|",
-            byte_array_reverse
-        );
     } else if argument.contains("-only") {
         length += create_list(0, only_range, 0, &character_array, &file);
-
-        let length_string = length.to_string();
-
-        let mut byte_array = length_string.as_bytes().to_vec();
-        let mut index = byte_array.len() - 1;
-
-        let mut index_int: i32 = index.try_into().unwrap();
-        if index_int - 2 >= 0 {
-            index -= 2;
-            byte_array.insert(index, 32);
-        }
-
-        loop {
-            index_int = index.try_into().unwrap();
-            if index_int - 3 >= 0 {
-                index -= 3;
-                byte_array.insert(index, 32);
-            } else {
-                break;
-            }
-        }
-
-        let byte_array_reverse = str::from_utf8(&byte_array).unwrap();
-
-        println!(
-            "Total number of generated passwords ---> |{}|",
-            byte_array_reverse
-        );
     } else {
         let mut counter = 0;
         unsafe {
@@ -501,33 +445,33 @@ fn main() {
                 counter += 1;
                 length += create_list(0, 0, counter, &character_array, &file);
             }
-
-            let length_string = length.to_string();
-
-            let mut byte_array = length_string.as_bytes().to_vec();
-            let mut index = byte_array.len() - 1;
-
-            let mut index_int: i32 = index.try_into().unwrap();
-            if index_int - 2 >= 0 {
-                index -= 2;
-                byte_array.insert(index, 32);
-            }
-            loop {
-                index_int = index.try_into().unwrap();
-                if index_int - 3 >= 0 {
-                    index -= 3;
-                    byte_array.insert(index, 32);
-                } else {
-                    break;
-                }
-            }
-
-            let byte_array_reverse = str::from_utf8(&byte_array).unwrap();
-
-            println!(
-                "Total number of generated passwords ---> |{}|",
-                byte_array_reverse
-            );
         }
     }
+
+    let length_string = length.to_string();
+
+    let mut byte_array = length_string.as_bytes().to_vec();
+    let mut index = byte_array.len() - 1;
+
+    let mut index_int: i32 = index.try_into().unwrap();
+    if index_int - 2 >= 0 {
+        index -= 2;
+        byte_array.insert(index, 32);
+    }
+    loop {
+        index_int = index.try_into().unwrap();
+        if index_int - 3 >= 0 {
+            index -= 3;
+            byte_array.insert(index, 32);
+        } else {
+            break;
+        }
+    }
+
+    let byte_array_reverse = str::from_utf8(&byte_array).unwrap();
+
+    println!(
+        "Total number of generated passwords ---> |{}|",
+        byte_array_reverse
+    );
 }
