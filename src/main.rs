@@ -74,7 +74,13 @@ fn main() {
         }
     }
 
-    fn create_list(range_1: i8, character_array: &[char; 61], mut file: &File) -> u64 {
+    fn create_list(
+        range_1: i8,
+        only_range: i8,
+        counter: i8,
+        character_array: &[char; 61],
+        mut file: &File,
+    ) -> u64 {
         let mut password_length = 1;
         let error_message: &str = "Unable to write to text file!";
         let mut length_inner: u64 = 0;
@@ -83,6 +89,14 @@ fn main() {
             password_length = range_1;
         } else {
             ()
+        }
+        if only_range > 0 {
+            password_length = only_range;
+        } else {
+            ()
+        }
+        if counter > 0 {
+            password_length = counter;
         }
 
         if password_length == 1 {
@@ -418,7 +432,7 @@ fn main() {
 
     if argument.contains("-range") {
         for _i in range_1..=range_2 {
-            length += create_list(range_1, &character_array, &file);
+            length += create_list(range_1, only_range, 0, &character_array, &file);
 
             range_1 += 1;
         }
@@ -450,5 +464,70 @@ fn main() {
             "Total number of generated passwords ---> |{}|",
             byte_array_reverse
         );
+    } else if argument.contains("-only") {
+        length += create_list(0, only_range, 0, &character_array, &file);
+
+        let length_string = length.to_string();
+
+        let mut byte_array = length_string.as_bytes().to_vec();
+        let mut index = byte_array.len() - 1;
+
+        let mut index_int: i32 = index.try_into().unwrap();
+        if index_int - 2 >= 0 {
+            index -= 2;
+            byte_array.insert(index, 32);
+        }
+
+        loop {
+            index_int = index.try_into().unwrap();
+            if index_int - 3 >= 0 {
+                index -= 3;
+                byte_array.insert(index, 32);
+            } else {
+                break;
+            }
+        }
+
+        let byte_array_reverse = str::from_utf8(&byte_array).unwrap();
+
+        println!(
+            "Total number of generated passwords ---> |{}|",
+            byte_array_reverse
+        );
+    } else {
+        let mut counter = 0;
+        unsafe {
+            while BOOL_EXIT == false || counter > 6 {
+                counter += 1;
+                length += create_list(0, 0, counter, &character_array, &file);
+            }
+
+            let length_string = length.to_string();
+
+            let mut byte_array = length_string.as_bytes().to_vec();
+            let mut index = byte_array.len() - 1;
+
+            let mut index_int: i32 = index.try_into().unwrap();
+            if index_int - 2 >= 0 {
+                index -= 2;
+                byte_array.insert(index, 32);
+            }
+            loop {
+                index_int = index.try_into().unwrap();
+                if index_int - 3 >= 0 {
+                    index -= 3;
+                    byte_array.insert(index, 32);
+                } else {
+                    break;
+                }
+            }
+
+            let byte_array_reverse = str::from_utf8(&byte_array).unwrap();
+
+            println!(
+                "Total number of generated passwords ---> |{}|",
+                byte_array_reverse
+            );
+        }
     }
 }
