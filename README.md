@@ -1,6 +1,6 @@
-# Unique-password-generator
+# Password-generator
 ## What it does?
-The program creates all possible variations of passwords in a given length and then writes them in the 'list.txt' file.
+The program creates all possible variations of passwords in a given length and then writes them in the 'list.txt' file or you can generate one random password in given length.
 ## How to run?
 1. [Install Rust](https://www.rust-lang.org/tools/install)
 2. In the project folder run `cargo build --release`
@@ -14,6 +14,10 @@ The program creates all possible variations of passwords in a given length and t
 2. -only ( number )
 - Generates *only* passwords in a given length
 - Example : `./password-generator -only 3`
+3. -one (number )
+- Generates *only* __one__ random password in a given length
+- Example : `./password-generator -one 12`
+- You can generate single passwords up to 15 characters.
 
 ### Additional information
  __Max password length is 6 because to generate *,142742836×10¹²* passwords (61^7) you would need a *really powerful machine to finish the program in hours, not in days or years.*__
