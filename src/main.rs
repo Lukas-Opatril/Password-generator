@@ -10,12 +10,13 @@ fn main() {
 
     static mut BOOL_EXIT: bool = false;
     let mut argument = String::new();
+    //let mut second_argument: String = String::new();
     let mut only_one: bool = false;
     let mut range_1: i8 = 0;
     let mut range_2: i8 = 0;
     let mut only_range: i8 = 0;
     let file = File::create("list.txt").expect("Failed to create a text file!");
-    let character_array = [
+    let mut character_array: Vec<char> = vec![
         'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r',
         's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J',
         'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', '1', '2',
@@ -32,72 +33,158 @@ fn main() {
     if args.len() > 1 {
         argument = args[1].clone();
 
-        if argument.contains("-range") {
-            if args.len() < 4 {
-                println!("You didn't specify the range!");
+        if argument.contains("-add") {
+            if args.len() == 2 {
+                println!("You forgot to add custom characters!");
                 exit(0);
-            } else if args.len() > 4 {
-                println!("Too many arguments!");
-                exit(0);
-            } else {
-                range_1 = args[2].parse().expect("Failed to parse range arguments");
-                range_2 = args[3].parse().expect("Failed to parse range arguments");
+            } else if args.len() >= 3 {
+                let characters_plus_array: Vec<char> = args[2].clone().chars().collect();
+                for character in characters_plus_array {
+                    character_array.push(character);
+                }
+                if args.len() > 3 {
+                    let argument_2 = args[3].clone();
 
-                if range_1 > range_2 {
-                    println!("Beginning range can't be bigger then ending range");
-                    exit(0);
-                }
-                if range_1 < 1 || range_2 < 1 {
-                    println!("Your paswords can't be 0 length");
-                    exit(0);
-                }
-                if range_1 > 6 || range_2 > 6 {
-                    println!("Maximum range is 6!");
-                    exit(0);
-                }
-            }
-        } else if argument.contains("-only") {
-            if args.len() < 3 {
-                println!("You didn't specify the password length!");
-                exit(0);
-            } else if args.len() > 3 {
-                println!("Too many arguments!");
-                exit(0);
-            } else {
-                only_range = args[2].parse().expect("Failed to parse");
+                    if argument_2.contains("-range") {
+                        argument = String::from("-range");
+                        if args.len() < 6 {
+                            println!("You didn't specify the range!");
+                            exit(0);
+                        } else if args.len() > 6 {
+                            println!("Too many arguments!");
+                            exit(0);
+                        } else {
+                            range_1 = args[4].parse().expect("Failed to parse range arguments");
+                            range_2 = args[5].parse().expect("Failed to parse range arguments");
 
-                if only_range < 1 {
-                    println!("Your paswords can't be 0 length");
-                    exit(0);
-                }
-                if only_range > 6 {
-                    println!("Maximum length is 6!");
-                    exit(0);
-                }
-            }
-        } else if argument.contains("-one") {
-            if args.len() < 3 {
-                println!("You didn't specify the password length!");
-                exit(0);
-            }
-            if args.len() > 3 {
-                println!("Too many arguments!");
-                exit(0);
-            } else {
-                only_one = true;
-                only_range = args[2].parse().expect("Failed to parse");
+                            if range_1 > range_2 {
+                                println!("Beginning range can't be bigger then ending range");
+                                exit(0);
+                            }
+                            if range_1 < 1 || range_2 < 1 {
+                                println!("Your paswords can't be 0 length");
+                                exit(0);
+                            }
+                            if range_1 > 6 || range_2 > 6 {
+                                println!("Maximum range is 6!");
+                                exit(0);
+                            }
+                        }
+                    } else if argument_2.contains("-only") {
+                        argument = String::from("-only");
+                        if args.len() < 5 {
+                            println!("You didn't specify the password length!");
+                            exit(0);
+                        } else if args.len() > 5 {
+                            println!("Too many arguments!");
+                            exit(0);
+                        } else {
+                            only_range = args[4].parse().expect("Failed to parse");
 
-                if only_range < 1 {
-                    println!("Your paswords can't be 0 length");
-                    exit(0);
-                } else if only_range > 15 {
-                    println!("Maximum length is 15!");
-                    exit(0);
+                            if only_range < 1 {
+                                println!("Your paswords can't be 0 length");
+                                exit(0);
+                            }
+                            if only_range > 6 {
+                                println!("Maximum length is 6!");
+                                exit(0);
+                            }
+                        }
+                    } else if argument_2.contains("-one") {
+                        argument = String::from("-one");
+                        if args.len() < 5 {
+                            println!("You didn't specify the password length!");
+                            exit(0);
+                        }
+                        if args.len() > 5 {
+                            println!("Too many arguments!");
+                            exit(0);
+                        } else {
+                            only_one = true;
+                            only_range = args[4].parse().expect("Failed to parse");
+
+                            if only_range < 1 {
+                                println!("Your paswords can't be 0 length");
+                                exit(0);
+                            } else if only_range > 15 {
+                                println!("Maximum length is 15!");
+                                exit(0);
+                            }
+                        }
+                    } else {
+                        println!("Invalid argument!");
+                        exit(0);
+                    }
                 }
             }
         } else {
-            println!("Invalid argument!");
-            exit(0);
+            if argument.contains("-range") {
+                if args.len() < 4 {
+                    println!("You didn't specify the range!");
+                    exit(0);
+                } else if args.len() > 4 {
+                    println!("Too many arguments!");
+                    exit(0);
+                } else {
+                    range_1 = args[2].parse().expect("Failed to parse range arguments");
+                    range_2 = args[3].parse().expect("Failed to parse range arguments");
+
+                    if range_1 > range_2 {
+                        println!("Beginning range can't be bigger then ending range");
+                        exit(0);
+                    }
+                    if range_1 < 1 || range_2 < 1 {
+                        println!("Your paswords can't be 0 length");
+                        exit(0);
+                    }
+                    if range_1 > 6 || range_2 > 6 {
+                        println!("Maximum range is 6!");
+                        exit(0);
+                    }
+                }
+            } else if argument.contains("-only") {
+                if args.len() < 3 {
+                    println!("You didn't specify the password length!");
+                    exit(0);
+                } else if args.len() > 3 {
+                    println!("Too many arguments!");
+                    exit(0);
+                } else {
+                    only_range = args[2].parse().expect("Failed to parse");
+
+                    if only_range < 1 {
+                        println!("Your paswords can't be 0 length");
+                        exit(0);
+                    }
+                    if only_range > 6 {
+                        println!("Maximum length is 6!");
+                        exit(0);
+                    }
+                }
+            } else if argument.contains("-one") {
+                if args.len() < 3 {
+                    println!("You didn't specify the password length!");
+                    exit(0);
+                }
+                if args.len() > 3 {
+                    println!("Too many arguments!");
+                    exit(0);
+                } else {
+                    only_one = true;
+                    only_range = args[2].parse().expect("Failed to parse");
+
+                    if only_range < 1 {
+                        println!("Your paswords can't be 0 length");
+                        exit(0);
+                    } else if only_range > 15 {
+                        println!("Maximum length is 15!");
+                        exit(0);
+                    }
+                }
+            } else {
+                println!("Invalid argument!");
+                exit(0);
+            }
         }
     }
 
@@ -106,7 +193,7 @@ fn main() {
         range_1: i8,
         only_range: i8,
         counter: i8,
-        character_array: &[char; 61],
+        character_array: &Vec<char>,
         mut file: &File,
     ) -> u64 {
         let mut sixth_character_array_index: usize = 0;
@@ -158,18 +245,16 @@ fn main() {
                     .expect(error_message);
                 length_inner += 1;
 
-                second_character_array_index += 1;
-
-                if second_character_array_index == character_array.len()
-                    && password_begin != String::from("9")
-                {
-                    second_character_array_index = 0;
+                if password_begin_index != character_array.len() - 1 {
                     password_begin_index += 1;
                     password_begin = character_array[password_begin_index].to_string();
-                }
-                if password_begin == String::from("9")
-                    && second_character_array_index == character_array.len()
+                } else if password_begin_index == character_array.len() - 1
+                    && second_character_array_index != character_array.len() - 1
                 {
+                    password_begin_index = 0;
+                    password_begin = character_array[password_begin_index].to_string();
+                    second_character_array_index += 1;
+                } else {
                     break;
                 }
             }
@@ -199,7 +284,7 @@ fn main() {
                 //Third switch
                 else if password_begin_index == character_array.len() - 1
                     && second_character_array_index == character_array.len() - 1
-                    && third_character_array_index != 60
+                    && third_character_array_index != character_array.len() - 1
                 {
                     password_begin_index = 0;
                     second_character_array_index = 0;
@@ -254,7 +339,7 @@ fn main() {
                 else if password_begin_index == character_array.len() - 1
                     && second_character_array_index == character_array.len() - 1
                     && third_character_array_index == character_array.len() - 1
-                    && fourth_character_array_index != 60
+                    && fourth_character_array_index != character_array.len() - 1
                 {
                     password_begin_index = 0;
                     second_character_array_index = 0;
@@ -324,7 +409,7 @@ fn main() {
                     && second_character_array_index == character_array.len() - 1
                     && third_character_array_index == character_array.len() - 1
                     && fourth_character_array_index == character_array.len() - 1
-                    && fifth_character_array_index != 60
+                    && fifth_character_array_index != character_array.len() - 1
                 {
                     password_begin_index = 0;
                     second_character_array_index = 0;
@@ -411,7 +496,7 @@ fn main() {
                     && third_character_array_index == character_array.len() - 1
                     && fourth_character_array_index == character_array.len() - 1
                     && fifth_character_array_index == character_array.len() - 1
-                    && sixth_character_array_index != 60
+                    && sixth_character_array_index != character_array.len() - 1
                 {
                     password_begin_index = 0;
                     second_character_array_index = 0;
