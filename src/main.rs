@@ -81,6 +81,14 @@ fn main() {
         character_array: &[char; 61],
         mut file: &File,
     ) -> u64 {
+        let mut sixth_character_array_index: usize = 0;
+        let mut fifth_character_array_index: usize = 0;
+        let mut fourth_character_array_index: usize = 0;
+        let mut second_character_array_index: usize = 0;
+        let mut third_character_array_index: usize = 0;
+        let mut password_begin_index: usize = 0;
+        let mut password_begin: String = character_array[password_begin_index].to_string();
+
         let mut password_length = 1;
         let error_message: &str = "Unable to write to text file!";
         let mut length_inner: u64 = 0;
@@ -108,38 +116,30 @@ fn main() {
                 length_inner += 1;
             }
         } else if password_length == 2 {
-            let mut character_array_index: usize = 0;
-            let mut password_begin_index: usize = 0;
-            let mut password_begin: String = character_array[password_begin_index].to_string();
             loop {
                 let mut password = password_begin.clone();
-                password.push(character_array[character_array_index]);
+                password.push(character_array[second_character_array_index]);
                 let formated_password = format!("{password}\n");
                 file.write(formated_password.as_bytes())
                     .expect(error_message);
                 length_inner += 1;
 
-                character_array_index += 1;
+                second_character_array_index += 1;
 
-                if character_array_index == character_array.len()
+                if second_character_array_index == character_array.len()
                     && password_begin != String::from("9")
                 {
-                    character_array_index = 0;
+                    second_character_array_index = 0;
                     password_begin_index += 1;
                     password_begin = character_array[password_begin_index].to_string();
                 }
                 if password_begin == String::from("9")
-                    && character_array_index == character_array.len()
+                    && second_character_array_index == character_array.len()
                 {
                     break;
                 }
             }
         } else if password_length == 3 {
-            let mut second_character_array_index: usize = 0;
-            let mut third_character_array_index: usize = 0;
-            let mut password_begin_index: usize = 0;
-            let mut password_begin: String = character_array[password_begin_index].to_string();
-
             loop {
                 let mut password = password_begin.clone();
                 password.push(character_array[second_character_array_index]);
@@ -178,12 +178,6 @@ fn main() {
                 }
             }
         } else if password_length == 4 {
-            let mut fourth_character_array_index: usize = 0;
-            let mut second_character_array_index: usize = 0;
-            let mut third_character_array_index: usize = 0;
-            let mut password_begin_index: usize = 0;
-            let mut password_begin: String = character_array[password_begin_index].to_string();
-
             loop {
                 unsafe {
                     if BOOL_EXIT == true {
@@ -240,13 +234,6 @@ fn main() {
                 }
             }
         } else if password_length == 5 {
-            let mut fifth_character_array_index: usize = 0;
-            let mut fourth_character_array_index: usize = 0;
-            let mut second_character_array_index: usize = 0;
-            let mut third_character_array_index: usize = 0;
-            let mut password_begin_index: usize = 0;
-            let mut password_begin: String = character_array[password_begin_index].to_string();
-
             loop {
                 unsafe {
                     if BOOL_EXIT == true {
@@ -318,14 +305,6 @@ fn main() {
                 }
             }
         } else if password_length == 6 {
-            let mut sixth_character_array_index: usize = 0;
-            let mut fifth_character_array_index: usize = 0;
-            let mut fourth_character_array_index: usize = 0;
-            let mut second_character_array_index: usize = 0;
-            let mut third_character_array_index: usize = 0;
-            let mut password_begin_index: usize = 0;
-            let mut password_begin: String = character_array[password_begin_index].to_string();
-
             loop {
                 unsafe {
                     if BOOL_EXIT == true {
