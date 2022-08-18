@@ -18,9 +18,18 @@ The program creates all possible variations of passwords in a given length and t
 - Generates *only* __one__ random password in a given length
 - Example : `./password-generator -one 12`
 - You can generate single passwords up to 15 characters.
+4. -add ( characters )
+- If a-z upper/lower characters and 0-9 numbers are not enough for you, you can add your custom characters with -add the argument.
+- ***Characters must be wrapped in single quotes, or the program won't work properly!***
+- You can combine this argument with others.
+- Examples : 
+- `./password-generator -add '@#$%^'`
+- `./password-generator -add '@#$%^' -range 1 6`
+- `./password-generator -add '@#$%^' -only 1`
+- `./password-generator -add '@#$%^' -one 14`
 
 ### Additional information
- __Max password length is 6 because to generate *,142742836×10¹²* passwords (61^7) you would need a *really powerful machine to finish the program in hours, not in days or years.*__
+ __Max password length is 6 because to generate *,142742836×10¹²* passwords (61(default vector len)^7) you would need a *really powerful machine to finish the program in hours, not in days or years.*__
  
  __If you want to generate all possible variations of 5 or 6-length passwords, make sure, you have enough disk drive space :) 10GB+__
  
