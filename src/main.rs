@@ -1,3 +1,4 @@
+use rand::{thread_rng, Rng};
 use std::env;
 use std::fs::File;
 use std::io::Write;
@@ -8,8 +9,8 @@ fn main() {
     println!("To abort program, press Ctrl + C in Your console.");
 
     static mut BOOL_EXIT: bool = false;
-
     let mut argument = String::new();
+    let mut only_one: bool = false;
     let mut range_1: i8 = 0;
     let mut range_2: i8 = 0;
     let mut only_range: i8 = 0;
@@ -35,6 +36,9 @@ fn main() {
             if args.len() < 4 {
                 println!("You didn't specify the range!");
                 exit(0);
+            } else if args.len() > 4 {
+                println!("Too many arguments!");
+                exit(0);
             } else {
                 range_1 = args[2].parse().expect("Failed to parse range arguments");
                 range_2 = args[3].parse().expect("Failed to parse range arguments");
@@ -56,6 +60,9 @@ fn main() {
             if args.len() < 3 {
                 println!("You didn't specify the password length!");
                 exit(0);
+            } else if args.len() > 3 {
+                println!("Too many arguments!");
+                exit(0);
             } else {
                 only_range = args[2].parse().expect("Failed to parse");
 
@@ -68,6 +75,26 @@ fn main() {
                     exit(0);
                 }
             }
+        } else if argument.contains("-one") {
+            if args.len() < 3 {
+                println!("You didn't specify the password length!");
+                exit(0);
+            }
+            if args.len() > 3 {
+                println!("Too many arguments!");
+                exit(0);
+            } else {
+                only_one = true;
+                only_range = args[2].parse().expect("Failed to parse");
+
+                if only_range < 1 {
+                    println!("Your paswords can't be 0 length");
+                    exit(0);
+                } else if only_range > 15 {
+                    println!("Maximum length is 15!");
+                    exit(0);
+                }
+            }
         } else {
             println!("Invalid argument!");
             exit(0);
@@ -75,6 +102,7 @@ fn main() {
     }
 
     fn create_list(
+        only_one: bool,
         range_1: i8,
         only_range: i8,
         counter: i8,
@@ -98,10 +126,16 @@ fn main() {
         } else {
             ()
         }
-        if only_range > 0 {
+        if only_range > 0 && only_one == false {
             password_length = only_range;
-        } else {
-            ()
+        } else if only_range > 0 && only_one == true {
+            let mut password: String = String::new();
+            for _i in 1..=only_range {
+                password.push(character_array[thread_rng().gen_range(0..character_array.len())]);
+            }
+            println!("Your password : {}", password);
+            length_inner += 1;
+            return length_inner;
         }
         if counter > 0 {
             password_length = counter;
@@ -411,18 +445,20 @@ fn main() {
 
     if argument.contains("-range") {
         for _i in range_1..=range_2 {
-            length += create_list(range_1, only_range, 0, &character_array, &file);
+            length += create_list(false, range_1, only_range, 0, &character_array, &file);
 
             range_1 += 1;
         }
     } else if argument.contains("-only") {
-        length += create_list(0, only_range, 0, &character_array, &file);
+        length += create_list(false, 0, only_range, 0, &character_array, &file);
+    } else if argument.contains("-one") {
+        length += create_list(only_one, 0, only_range, 0, &character_array, &file);
     } else {
         let mut counter = 0;
         unsafe {
             while BOOL_EXIT == false || counter > 6 {
                 counter += 1;
-                length += create_list(0, 0, counter, &character_array, &file);
+                length += create_list(false, 0, 0, counter, &character_array, &file);
             }
         }
     }
